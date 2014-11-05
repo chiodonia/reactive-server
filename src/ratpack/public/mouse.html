@@ -1,0 +1,64 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+        }
+        canvas {
+            margin: 0;
+            padding: 0;
+            border:1px solid #000000;
+        }
+    </style>
+</head>
+<body>
+<canvas id='canvas' width="600px" height="400px">
+    Canvas not supported
+</canvas>
+<script src="//cdn.ractivejs.org/latest/ractive.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bacon.js/0.7.23/Bacon.min.js"></script>
+<script>
+$(function () {
+    var socket = new WebSocket("ws://localhost:7070/move");
+
+    var canvas = $('#canvas').get(0);
+
+    var canvasCtx = canvas.getContext('2d');
+    canvasCtx.lineWidth = 1;
+    canvasCtx.strokeStyle="#FF0000";
+
+    var moves = $('#canvas').asEventStream('mousemove');
+
+    moves
+        .take(1)
+        .onValue(function(pos) {
+            canvasCtx.moveTo(pox.x, pos.y);
+        });
+
+    moves
+        .skip(1)
+        .map(function(e) {
+           return {x: e.clientX, y: e.clientY};
+        })
+        .doAction(function(pos) {
+            canvasCtx.lineTo(pos.x, pos.y);
+            canvasCtx.stroke();
+        })
+        .map(function(pos) {
+           return {x: pos.x / canvas.width, y: pos.y / canvas.height};
+        })
+        .onValue(function(pos) {
+           socket.send(JSON.stringify(pos));
+           console.log("SENDING:" + JSON.stringify(pos));
+        });
+
+});
+</script>
+</body>
+</html>

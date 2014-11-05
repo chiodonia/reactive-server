@@ -1,0 +1,74 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+        }
+        canvas {
+            margin: 0;
+            padding: 0;
+            border:1px solid #000000;
+        }
+    </style>
+</head>
+<body>
+<canvas id='canvas' width="800px" height="600px">
+    Canvas not supported
+</canvas>
+<script src="//cdn.ractivejs.org/latest/ractive.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bacon.js/0.7.23/Bacon.min.js"></script>
+<script>
+$(function() {
+    var socket = new WebSocket("ws://localhost:7070/drawing");
+
+    var canvas = $('#canvas').get(0);
+
+    var canvasCtx = canvas.getContext('2d');
+    canvasCtx.lineWidth = 1;
+    canvasCtx.strokeStyle="#FF0000";
+
+    var observable = Bacon.fromEventTarget(socket, "message")
+        .map(function(message) {
+            return JSON.parse(message.data);
+        })
+        .map(function(pos) {
+            pos.x = pos.x * canvas.width;
+            pos.y = pos.y * canvas.height;
+            return pos;
+        })
+        .doAction(function(pos) {
+             console.log("WEBSOCKET MESSAGE: " + JSON.stringify(pos));
+        });
+
+    observable
+        .take(1)
+        .onValue(function(pos) {
+            canvasCtx.moveTo(pox.x, pos.y);
+        });
+
+    observable
+        .skip(1)
+        .onValue(function(pos) {
+            console.log("DRAWING: " + JSON.stringify(pos));
+            canvasCtx.lineTo(pos.x, pos.y);
+            canvasCtx.stroke();
+        });
+
+    observable.onError(function(data) {
+         console.log("ERROR");
+    });
+
+    observable.onEnd(function(data) {
+         console.log("END");
+    });
+
+});
+</script>
+</body>
+</html>

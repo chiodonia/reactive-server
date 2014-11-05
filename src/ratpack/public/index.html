@@ -1,0 +1,38 @@
+<!doctype html>
+<head xmlns="http://www.w3.org/1999/html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>Ractive demo</title>
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap-theme.min.css">
+</head>
+<body>
+<div id='container'></div>
+<script id='template' type='text/ractive'>
+    <div class="container">
+        <div class="page-header">
+            <h1>Reactive demo!</h1>
+            <p class="lead">Example to show a reactive client and a reactive server</p>
+        </div>
+        <div class="row-fluid">
+            <form role="form">
+                <div class="form-group">
+                    <label for="textInput">Quantity</label>
+                    <input type="text" id="nr" class="form-control" placeholder="How many...">
+                    <label for="textInput">Enter modulo</label>
+                    <input type="text" id="modulo" class="form-control" placeholder="Enter modulo...">
+                    <input id="my-button">
+                </div>
+            </form>
+        </div>
+        <div class="row-fluid">
+            <div class="alert alert-success" role="alert"><h1 id="results">{{result}}</h1></div>
+        </div>
+    </div>
+</script>
+<script src="//cdn.ractivejs.org/latest/ractive.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bacon.js/0.7.23/Bacon.min.js"></script>
+<script src="app.js"></script>
+</body>

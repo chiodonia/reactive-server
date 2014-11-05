@@ -1,0 +1,30 @@
+apply plugin: "idea"
+apply plugin: "java"
+
+version = "$version"
+group = 'ch.chiodoni.lab'
+archivesBaseName = 'reactive-facade-server'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenCentral()
+    maven { url "http://oss.jfrog.org/artifactory/repo" }
+    maven { url 'http://repo.spring.io/libs-release' }
+    maven { url 'http://repo.spring.io/libs-milestone' }
+    maven { url 'http://repo.spring.io/libs-snapshot' }
+}
+
+dependencies {
+    compile "org.projectreactor:reactor-core:$reactorVersion"
+    compile "io.ratpack:ratpack-codahale-metrics:$ratpackVersion"
+    compile "io.ratpack:ratpack-jackson:$ratpackVersion"
+    compile "io.ratpack:ratpack-groovy:$ratpackVersion"
+    compile "io.ratpack:ratpack-guice:$ratpackVersion"
+
+    runtime "ch.qos.logback:logback-classic:$logbackVersion"
+
+    testCompile "junit:junit:$junitVersion"
+    testCompile "io.ratpack:ratpack-groovy-test:$ratpackVersion"
+}
